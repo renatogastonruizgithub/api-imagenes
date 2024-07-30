@@ -18,6 +18,8 @@ FIREBASE_TOKEN_URI = os.getenv('FIREBASE_TOKEN_URI')
 FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.getenv('FIREBASE_AUTH_PROVIDER_X509_CERT_URL')
 FIREBASE_CLIENT_X509_CERT_URL = os.getenv('FIREBASE_CLIENT_X509_CERT_URL')
 FIREBASE_UNIVERSE_DOMAIN=os.getenv('FIREBASE_UNIVERSE_DOMAIN')
+FIREBASE_RUTE=os.getenv('FIREBASE_RUTE')
+
 
 cred = credentials.Certificate({
   "type": FIREBASE_TYPE,
@@ -40,7 +42,7 @@ firebase_admin.initialize_app(cred, {
 def upload_image_from_firebase(image):
     try:
         bucket = storage.bucket()            
-        blob = bucket.blob(f'portafolio/{uuid.uuid4()}-{image.name}')
+        blob = bucket.blob(f'{FIREBASE_RUTE}/{uuid.uuid4()}-{image.name}')
         blob.upload_from_file(image.file, content_type=image.content_type)
         blob.make_public()
         firebase_url = blob.public_url
@@ -57,7 +59,7 @@ def delete_image_from_firebase(url):
         # Obtener una referencia al bucket de almacenamiento de Firebase
         bucket = storage.bucket()
         # Obtener una referencia al archivo en Firebase Storage
-        blob = bucket.blob("portafolio/"+filename)              
+        blob = bucket.blob(f"{FIREBASE_RUTE}/"+filename)              
         blob.delete()       
         return True  
 
